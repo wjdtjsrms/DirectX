@@ -3,7 +3,10 @@
 #include "../Header_File/CameraClass.h"
 #include "../Header_File/ModelClass.h"
 #include "../Header_File/ColorShaderClass.h"
+#include "../Header_File/TextureShaderClass.h"
 #include "../Header_File/Graphics.h"
+
+
 
 GraphicsClass::GraphicsClass()
 {
@@ -44,7 +47,9 @@ bool GraphicsClass::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 
 		return false;
 	}
-	if (!m_Model->Initialize(m_Direct3D->GetDevice()))
+	
+
+	if (!m_Model->Initialize(m_Direct3D->GetDevice(),m_Direct3D->GetDeviceContext(), const_cast <char *> ("DirectX/Resource/stone01.tga")))
 	{
 		MessageBox(hwnd, L"MODEL_INITIALIZE_ERROR", L"ERROR", MB_OK);
 		return false;
@@ -58,6 +63,17 @@ bool GraphicsClass::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 	if (!m_ColorShader->Initialize(m_Direct3D->GetDevice(),hwnd))
 	{
 		MessageBox(hwnd, L"SHADER_INITIALIZE_ERROR", L"ERROR", MB_OK);
+		return false;
+	}
+
+	m_TextureShader = new TextureShaderClass;
+	if (!m_TextureShader)
+	{
+		return false;
+	}
+	if (!m_TextureShader->Initialize(m_Direct3D->GetDevice(),hwnd))
+	{
+		MessageBox(hwnd, L"TEXTURE_SHADER_INITIALIZE_ERROR", L"ERROR", MB_OK);
 		return false;
 	}
 
@@ -84,7 +100,11 @@ bool GraphicsClass::Render()
 
 	m_Model->Render(m_Direct3D->GetDeviceContext());
 
-	if (!m_ColorShader->Render(m_Direct3D->GetDeviceContext(), m_Model->GetIndexCount(), worldMatirx, viewMatrix, projectionMatirx))
+	//if (!m_ColorShader->Render(m_Direct3D->GetDeviceContext(), m_Model->GetIndexCount(), worldMatirx, viewMatrix, projectionMatirx))
+	//{
+	//	return false;
+	//}
+	if (!m_TextureShader->Render(m_Direct3D->GetDeviceContext(), m_Model->GetIndexCount(), worldMatirx, viewMatrix, projectionMatirx, m_Model->GetTexture()))
 	{
 		return false;
 	}
@@ -97,6 +117,13 @@ bool GraphicsClass::Render()
 
 void GraphicsClass::Shutdown()
 {
+	if (m_TextureShader)
+	{
+		m_TextureShader->Shutdown();
+		delete m_TextureShader;
+		m_TextureShader = 0;
+	}
+
 	if (m_ColorShader)
 	{
 		m_ColorShader->Shutdown();

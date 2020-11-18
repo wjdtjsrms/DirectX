@@ -1,4 +1,5 @@
 #include "stdafx.h"
+#include "../Header_File/TextureClass.h"
 #include "../Header_File/ModelClass.h"
 
 ModelClass::ModelClass()
@@ -13,13 +14,27 @@ ModelClass::~ModelClass()
 {
 }
 
-bool ModelClass::Initialize(ID3D11Device* device)
+//bool ModelClass::Initialize(ID3D11Device* device)
+//{
+//	return InitializeBuffers(device);
+//}
+
+bool ModelClass::Initialize(ID3D11Device* device, ID3D11DeviceContext* deviceContext, char* textureFilename)
 {
-	return InitializeBuffers(device);
+	//정점 및 인덱스 버퍼를 초기화 한다.
+	if (!InitializeBuffers(device))
+	{
+		return false;
+	}
+
+	// 이 모델의 텍스쳐를 로드한다.
+	return LoadTexture(device, deviceContext, textureFilename);
 }
 
 void ModelClass::Shutdown()
 {
+	ReleaseTexture();
+
 	ShutdownBuffers();
 }
 
@@ -32,6 +47,11 @@ void ModelClass::Render(ID3D11DeviceContext* deviceContext)
 int ModelClass::GetIndexCount()
 {
 	return m_indexCount;
+}
+
+ID3D11ShaderResourceView* ModelClass::GetTexture()
+{
+	return m_Texture->GetTexture();
 }
 
 bool ModelClass::InitializeBuffers(ID3D11Device* device)
@@ -121,6 +141,7 @@ bool ModelClass::InitializeBuffers(ID3D11Device* device)
 	return true;
 }
 
+
 void ModelClass::ShutdownBuffers()
 {
 	if (m_indexBuffer)
@@ -151,4 +172,25 @@ void ModelClass::RenderBuffers(ID3D11DeviceContext* deviceContext)
 
 	//정점 버퍼로 그릴 기본형을 선택한다. 여기서는 삼각형이다.
 	deviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+}
+
+bool ModelClass::LoadTexture(ID3D11Device* device, ID3D11DeviceContext* deviceContext, char* textureFilename)
+{
+	m_Texture = new TextureClass;
+	if (!m_Texture)
+	{
+		return false;
+	}
+
+	return m_Texture->Initialize(device, deviceContext, textureFilename);
+}
+
+void ModelClass::ReleaseTexture()
+{
+	if (m_Texture)
+	{
+		m_Texture->Shutdown();
+		delete m_Texture;
+		m_Texture = 0;
+	}
 }

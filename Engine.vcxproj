@@ -152,6 +152,8 @@
     <ClCompile Include="DirectX\Source_File\ModelClass.cpp" />
     <ClCompile Include="DirectX\Source_File\stdafx.cpp" />
     <ClCompile Include="DirectX\Source_File\SystemClass.cpp" />
+    <ClCompile Include="DirectX\Source_File\TextureClass.cpp" />
+    <ClCompile Include="DirectX\Source_File\TextureShaderClass.cpp" />
     <ClCompile Include="DirectX\Source_File\WinMain.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -165,10 +167,14 @@
     <ClInclude Include="DirectX\Header_File\ModelClass.h" />
     <ClInclude Include="DirectX\Header_File\stdafx.h" />
     <ClInclude Include="DirectX\Header_File\SystemClass.h" />
+    <ClInclude Include="DirectX\Header_File\TextureClass.h" />
+    <ClInclude Include="DirectX\Header_File\TextureShaderClass.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Color.ps" />
     <None Include="Color.vs" />
+    <None Include="Texture.ps" />
+    <None Include="Texture.vs" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
