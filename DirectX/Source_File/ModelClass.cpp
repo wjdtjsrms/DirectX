@@ -56,11 +56,11 @@ ID3D11ShaderResourceView* ModelClass::GetTexture()
 
 bool ModelClass::InitializeBuffers(ID3D11Device* device)
 {
-	//삼각형 그릴려고 하는듯
+	//사각형의 정점 수 만큼 선언
 	//정점 배열의 정점 수를 설정한다.
-	m_vertexCount = 3;
+	m_vertexCount = 4;
 	//인덱스 배열의 인덱스 수를 설정한다.
-	m_indexCount = 3;
+	m_indexCount = 6;
 
 	//정점 배열을 만든다.(헤더에서 만든 구조체임)
 	VertexType* vertices = new VertexType[m_vertexCount];
@@ -78,18 +78,26 @@ bool ModelClass::InitializeBuffers(ID3D11Device* device)
 
 	//정점 배열에 데이터를 설정한다.
 	vertices[0].position = XMFLOAT3(-1.0f, -1.0f, 0.0f); // Bottom Left
-	vertices[0].color = XMFLOAT4(0.0f, 1.0f, 0.0f, 1.0f);
+	vertices[0].tex = XMFLOAT2(0.0f, 1.0f);
 
-	vertices[1].position = XMFLOAT3(0.0f, 1.0f, 0.0f); // Top Middle
-	vertices[1].color = XMFLOAT4(1.0f, 0.0f, 0.0f, 1.0f);
+	vertices[1].position = XMFLOAT3(-1.0f, 1.0f, 0.0f); // Top Left
+	vertices[1].tex = XMFLOAT2(0.0f, 0.0f);
 
-	vertices[2].position = XMFLOAT3(1.0f, -1.0f, 0.0f); // Bottom Right
-	vertices[2].color = XMFLOAT4(0.0f, 0.0f, 1.0f, 1.0f);
+	vertices[2].position = XMFLOAT3(1.0f, 1.0f, 0.0f); // Top Right
+	vertices[2].tex = XMFLOAT2(1.0f, 0.0f);
+
+	vertices[3].position = XMFLOAT3(1.0f, -1.0f, 0.0f); // Bottom Right
+	vertices[3].tex = XMFLOAT2(1.0f, 1.0f);
 
 	//인덱스 배열의 값을 설정한다.
+	//시계 방향으로 감긴다
 	indices[0] = 0; // Bottom Left
-	indices[1] = 1; // Top Middle
-	indices[2] = 2; // Bottom Right
+	indices[1] = 1; // Top Left
+	indices[2] = 2; // Top Right
+
+	indices[3] = 0; // Bottom Left
+	indices[4] = 2; // Top Right
+	indices[5] = 3; // Bottom Right
 
 	//정적 정점 버퍼의 구조체를 설정한다.
 	D3D11_BUFFER_DESC vertexBufferDesc;

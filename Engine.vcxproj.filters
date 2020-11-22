@@ -19,11 +19,11 @@
     <Filter Include="HLSL">
       <UniqueIdentifier>{743d11ae-7d34-49cd-89f7-0e664648c907}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Shader">
+      <UniqueIdentifier>{d79f48a8-91eb-4a35-87cc-7908291ca2d0}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="DirectX\Source_File\ColorShaderClass.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
     <ClCompile Include="DirectX\Source_File\D3DClass.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
@@ -45,21 +45,24 @@
     <ClCompile Include="DirectX\Source_File\CameraClass.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="DirectX\Source_File\stdafx.cpp">
-      <Filter>PCH</Filter>
-    </ClCompile>
-    <ClCompile Include="DirectX\Source_File\TextureShaderClass.cpp">
+    <ClCompile Include="DirectX\Source_File\TextureClass.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="DirectX\Source_File\TextureClass.cpp">
+    <ClCompile Include="DirectX\Source_File\ColorShaderClass.cpp">
+      <Filter>Shader</Filter>
+    </ClCompile>
+    <ClCompile Include="DirectX\Source_File\TextureShaderClass.cpp">
+      <Filter>Shader</Filter>
+    </ClCompile>
+    <ClCompile Include="DirectX\Source_File\LightShaderClass.cpp">
+      <Filter>Shader</Filter>
+    </ClCompile>
+    <ClCompile Include="DirectX\Source_File\LightClass.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="DirectX\Header_File\CameraClass.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="DirectX\Header_File\ColorShaderClass.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
     <ClInclude Include="DirectX\Header_File\D3DClass.h">
@@ -83,13 +86,22 @@
     <ClInclude Include="DirectX\Header_File\DxDefine.h">
       <Filter>PCH</Filter>
     </ClInclude>
-    <ClInclude Include="DirectX\Header_File\stdafx.h">
-      <Filter>PCH</Filter>
-    </ClInclude>
-    <ClInclude Include="DirectX\Header_File\TextureShaderClass.h">
+    <ClInclude Include="DirectX\Header_File\TextureClass.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="DirectX\Header_File\TextureClass.h">
+    <ClInclude Include="DirectX\Source_File\stdafx.h">
+      <Filter>PCH</Filter>
+    </ClInclude>
+    <ClInclude Include="DirectX\Header_File\ColorShaderClass.h">
+      <Filter>Shader</Filter>
+    </ClInclude>
+    <ClInclude Include="DirectX\Header_File\TextureShaderClass.h">
+      <Filter>Shader</Filter>
+    </ClInclude>
+    <ClInclude Include="DirectX\Header_File\LightShaderClass.h">
+      <Filter>Shader</Filter>
+    </ClInclude>
+    <ClInclude Include="DirectX\Header_File\LightClass.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
   </ItemGroup>
@@ -106,5 +118,16 @@
     <None Include="Texture.ps">
       <Filter>HLSL</Filter>
     </None>
+    <None Include="Light.vs">
+      <Filter>HLSL</Filter>
+    </None>
+    <None Include="Light.ps">
+      <Filter>HLSL</Filter>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="DirectX\Resource\stone01.tga">
+      <Filter>리소스 파일</Filter>
+    </Image>
   </ItemGroup>
 </Project>

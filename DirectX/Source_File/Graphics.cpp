@@ -4,6 +4,8 @@
 #include "../Header_File/ModelClass.h"
 #include "../Header_File/ColorShaderClass.h"
 #include "../Header_File/TextureShaderClass.h"
+#include "../Header_File/LightShaderClass.h"
+#include "../Header_File/LightClass.h"
 #include "../Header_File/Graphics.h"
 
 
@@ -77,17 +79,46 @@ bool GraphicsClass::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 		return false;
 	}
 
+	m_LightShaderClass = new LightShaderClass;
+	if (!m_LightShaderClass)
+	{
+		return false;
+	}
+
+	if (!m_LightShaderClass->Initialize(m_Direct3D->GetDevice(), hwnd))
+	{
+		MessageBox(hwnd, L"Light_SHADER_INITIALIZE_ERROR", L"ERROR", MB_OK);
+		return false;
+	}
+
+	m_LightClass = new LightClass;
+	if (!m_LightClass)
+	{
+		return false;
+	}
+	m_LightClass->SetDiffuseColor(1.0f, 1.0f, 1.0f, 1.0f);
+	m_LightClass->SetLightDIrection(0.0f, 0.0f, 1.0f);
 	
 	return true;
 }
 
 bool GraphicsClass::Frame()
 {
-	return Render();
+	static float rotation = 0.0f;
+	rotation += (float)XM_PI *0.005f;
+	if (rotation > 360.0f)
+	{
+		rotation -= 360.0f;
+	}
+
+	return Render(rotation);
 }
 
-bool GraphicsClass::Render()
+bool GraphicsClass::Render(float rotation)
 {
+	XMVECTOR lightDV = XMLoadFloat3(&m_LightClass->GetLightDirection());
+	XMFLOAT3 lightDF;
+
 	//씬을 그리기 위해 버퍼를 지운다.
 	m_Direct3D->BeginScene(0.0f, 0.0f, 0.0f, 1.0f);
 
@@ -98,17 +129,24 @@ bool GraphicsClass::Render()
 	m_Camera->GetViewMatrix(viewMatrix);
 	m_Direct3D->GetProjectionMatrix(projectionMatirx);
 
+	//worldMatirx = XMMatrixRotationY(rotation);
+
+	lightDV = XMVector3TransformNormal(lightDV, XMMatrixRotationY(rotation));
+	XMStoreFloat3(&lightDF, lightDV);
 	m_Model->Render(m_Direct3D->GetDeviceContext());
 
 	//if (!m_ColorShader->Render(m_Direct3D->GetDeviceContext(), m_Model->GetIndexCount(), worldMatirx, viewMatrix, projectionMatirx))
 	//{
 	//	return false;
 	//}
-	if (!m_TextureShader->Render(m_Direct3D->GetDeviceContext(), m_Model->GetIndexCount(), worldMatirx, viewMatrix, projectionMatirx, m_Model->GetTexture()))
+	//if (!m_TextureShader->Render(m_Direct3D->GetDeviceContext(), m_Model->GetIndexCount(), worldMatirx, viewMatrix, projectionMatirx, m_Model->GetTexture()))
+	//{
+	//	return false;
+	//}
+	if (!m_LightShaderClass->Render(m_Direct3D->GetDeviceContext(), m_Model->GetIndexCount(), worldMatirx, viewMatrix, projectionMatirx, m_Model->GetTexture(), lightDF, m_LightClass->GetDiffuseColor()))
 	{
 		return false;
 	}
-
 	//버퍼의 내용을 화면에 출력한다.
 	m_Direct3D->EndScene();
 
@@ -117,6 +155,17 @@ bool GraphicsClass::Render()
 
 void GraphicsClass::Shutdown()
 {
+	if (m_LightClass)
+	{
+		delete m_LightClass;
+		m_LightClass = 0;
+	}
+	if (m_LightShaderClass)
+	{
+		m_LightShaderClass->Shutdown();
+		delete m_LightShaderClass;
+		m_LightShaderClass = 0;
+	}
 	if (m_TextureShader)
 	{
 		m_TextureShader->Shutdown();

@@ -9,7 +9,8 @@ private:
 	struct VertexType
 	{
 		XMFLOAT3 position;
-		XMFLOAT4 color;
+		XMFLOAT2 tex;
+		XMFLOAT3 normal;
 	};
 public:
 	ModelClass();
